@@ -86,7 +86,6 @@ while True:
 			# of votes (note: in the event of an unlikely tie Python
 			# will select first entry in the dictionary)
 			name = max(counts, key=counts.get)
-			print(name)
 		
 		# update the list of names
 		names.append(name)
