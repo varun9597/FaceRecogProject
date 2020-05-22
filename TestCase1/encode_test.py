@@ -29,15 +29,39 @@ knownEncodings = existing_encodings
 knownNames = existing_names
 
 #NOW, WE FETCH LIST OF NAMES IN THE DATASET FOLDER   ------- dataset_name_list ==[]
-imagePaths = list(paths.list_images("/home/pi/FaceRecogProject/TestCase1/dataset/"))
+dataset_folder_path = "/home/pi/FaceRecogProject/TestCase1/dataset/"
+#imagePaths = list(paths.list_images("/home/pi/FaceRecogProject/TestCase1/dataset/"))
+dataset_name_list = [ f.path[len(dataset_folder_path):] for f in os.scandir(dataset_folder_path) if f.is_dir() ]
+print(dataset_name_list)
 
-for(i,imagePath) in enumerate(imagePaths):
-    dataset_name_list.append(imagePath[44:52])
 
 #IF VALUE IN DATASET FOLDER DOES NOT MATCH KNOWN NAMES THEN TRAIN 
-for(j,value) in enumerate(dataset_name_list):
-    if value not in knownNames:
-        print("New value found")
+for value in dataset_name_list:
+    if value in existing_names:
+        print("Value already exist---"+str(value))
+        continue
+    else :
+        imagePaths = list(paths.list_images(str(dataset_folder_path)+str(value)))
+        for (i,imagePath) in enumerate(imagePaths):
+            
+            image = cv2.imread(imagePath)
+            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+            boxes = face_recognition.face_locations(rgb, model="hog")
+
+            encodings = face_recognition.face_encodings(rgb, boxes)
+
+            for encoding in encodings:
+                knownEncodings.append(encoding)
+                knownNames.append(value)
+
+data = {"encodings":knownEncodings, "names":knownNames}
+f = open(encode_file,"wb")
+f.write(pickle.dumps(data))
+f.close()
+print("Done")
+
+
 
 # print(list(set(dataset_name_list)))
 # print(knownNames)
