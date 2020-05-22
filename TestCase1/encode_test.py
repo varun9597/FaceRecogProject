@@ -39,7 +39,7 @@ print(dataset_name_list)
 for value in dataset_name_list:
     if value in existing_names:
         print("Value already exist---"+str(value))
-        continue
+        break
     else :
         imagePaths = list(paths.list_images(str(dataset_folder_path)+str(value)))
         for (i,imagePath) in enumerate(imagePaths):
