@@ -28,7 +28,7 @@ def dataset_collection(*args):
 	time.sleep(2.0)
 	total = 0  									#counts the number of total images captured
 	
-	path = "dataset/"
+	path = "dataset/"+id_number+"/"
 	if not os.path.exists(path):
 		os.mkdir(path)
 	else:
@@ -54,7 +54,7 @@ def dataset_collection(*args):
 			#q = os.path.sep.join([args["output"], "{}.png".format(str(99).zfill(5))])
 			
 			# cv2.imwrite("dataset/"+str(first_name)[:3]+str(mid_name)[:3]+str(total)+".jpg", gray[y:y+h,x:x+w])
-			cv2.imwrite("dataset/"+str(id_number)+"_"+str(total)+".jpg", gray[y:y+h,x:x+w])
+			cv2.imwrite("dataset/"+str(id_number)+"/"+str(total)+".jpg", gray[y:y+h,x:x+w])
 			total+=1
 		
 		# show the output frame
