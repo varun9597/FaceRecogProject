@@ -8,10 +8,15 @@ import os
 encode_file_path = "encodings/"
 encode_file = "encodings/encodings.pickle"
 dataset_name_list = []
+encode_format_list = ['encodings','names']
+blank_dict = {key:[] for key in encode_format_list}
 
 def check_file_exist():
-    if not os.path.exists(encode_file_path):
-        os.mkdir(path)
+    if not os.path.isfile(encode_file):
+        with open(encode_file,'wb') as file:
+            pickle.dump(blank_dict, file)
+        return True
+    
     else:
         return True
 
@@ -21,12 +26,13 @@ def check_encodings_exist():
         return existing_encodes
         
 #THIS PART IS USED TO GET THE EXISTING NAMES AND ENCODINGS FROM THE EXISTING PICKLE FILE
+encode_file_exist = check_file_exist()
 exist_encode = check_encodings_exist()
 existing_names = list(set(list(exist_encode["names"])))
 existing_encodings = list(exist_encode["encodings"])
 
-knownEncodings = existing_encodings
-knownNames = existing_names
+knownEncodings = exist_encode["encodings"]
+knownNames = exist_encode["names"]
 
 #NOW, WE FETCH LIST OF NAMES IN THE DATASET FOLDER   ------- dataset_name_list ==[]
 dataset_folder_path = "/home/pi/FaceRecogProject/TestCase1/dataset/"
@@ -39,7 +45,7 @@ print(dataset_name_list)
 for value in dataset_name_list:
     if value in existing_names:
         print("Value already exist---"+str(value))
-        break
+        continue
     else :
         imagePaths = list(paths.list_images(str(dataset_folder_path)+str(value)))
         for (i,imagePath) in enumerate(imagePaths):
